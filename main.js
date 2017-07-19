@@ -29,30 +29,66 @@ const stockData = [
 ];
 
 function generateStockList(stockDataList) {
-  let stockListElm = stockDataList.map(function(stock) {
+  let stockListElm = stockDataList.map(function (stock) {
     return `<li>${createStock(stock)}</li>`
 
   });
 
   stockListElm = stockListElm.join('');
   console.log(stockListElm);
-  return `<ul>${stockListElm}</ul>`;
+  return `<ul class="reset-list stock-list">${stockListElm}</ul>`;
 }
 
 function createStock(stockData) {
   return `
-      <span>${stockData['Symbol']}</span>
-      <span> (${stockData['Name']})</span>
-      <div>
-        <span>${stockData['Change']}</span>
-        <button>${stockData['PercentChange']}</button>
-        <span>
-          <button class="up">^</button>
-          <button class="down">V</button>
+      <span class="stock-name">
+        <span>${stockData.Symbol}</span>
+        <span> (${stockData.Name})</span>
+      </span>
+      <div class="stock-info">
+        <span>${stockData.LastTradePriceOnly}</span>
+        <button class="${buttonColor(stockData)}">${stockData.PercentChange}</button>
+        <span class="upDown">
+          <button class="up"><img src="assets/svg/arrow.svg"></button>
+          <button class="down"><img src="assets/svg/arrow.svg"></button>
         </span>
        </div>
    `;
 }
+function buttonColor(stockData){
+  if(stockData.Change >= 0){
+    return 'green';
+  }
+  else{
+    return 'red';
+  }
+}
+function createHeader() {
+  return `<header>
+    <h1>STOKR</h1>
+    <ul class="menu reset-list">
+      <li>
+        <button><img src="assets/svg/search.svg"></button>
+      </li>
+      <li>
+        <button><img src="assets/svg/refresh.svg"></button>
+      </li>
+      <li>
+        <button><img src="assets/svg/filter.svg"></button>
+      </li>
+      <li>
+        <button><img src="assets/svg/settings.svg"></button>
+      </li>
+    </ul>
+  </header>`;
+}
+function createMain(stockData) {
+  return `<main>${generateStockList(stockData)}</main>`;
+}
 
-const mainElm = document.querySelector('main');
-mainElm.innerHTML = generateStockList(stockData);
+function init(stockData) {
+  return `${createHeader()}
+          ${createMain(stockData)}`;
+}
+const divElm = document.querySelector('.stock-list-page');
+divElm.innerHTML = init(stockData);

@@ -1,0 +1,98 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.reset-list {
+  list-style: none;
+}
+html{
+  height: 100%;
+}
+body{
+  background-color: #f0f4f7;
+  padding: 56px 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100%;
+}
+.stock-list-page {
+  background-color: white;
+  flex:1;
+}
+
+h1 {
+  color: #41bf15;
+  width: 166px;
+  height: 53px;
+  font-size: 39px;
+  font-weight: bold
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  margin-bottom: 1px;
+  border-bottom: 1px solid #e5e5e5;
+  height: 128px;
+  padding-right: 30px;
+  padding-left: 30px;
+
+
+}
+
+.menu {
+  display: flex;
+  align-items: flex-start;
+}
+
+.menu button{
+  border: none;
+  background: none;
+}
+.menu img{
+  height: 42px;
+}
+.stock-list{
+  padding: 0;
+
+}
+
+.stock-list li{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e5e5;
+  height: 114px;
+  padding-right: 30px;
+  padding-left: 30px;
+  align-items: center;
+}
+
+
+.stock-name{
+  font-size: 33px;
+  font-weight: 300;
+}
+
+.stock-info{
+  display: flex;
+  justify-content: space-between;
+  width: 33%;
+}
+.stock-info button{
+  background: none;
+  border-radius: 10px;
+}
+
+.stock-info .red{
+  background-color: #ff4f46;
+}
+
+.stock-info .green{
+  background-color: #63da39;
+}
