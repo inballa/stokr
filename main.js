@@ -35,8 +35,8 @@
   }
 
   function generateStockList(stockDataList) {
-    let stockListElm = stockDataList.map(function (stock) {
-      return `<li id="${stock.Symbol}">${createStock(stock)}</li>`
+    let stockListElm = stockDataList.map(function (stock, index) {
+      return `<li id="${stock.Symbol}">${createStock(stock, index, stockDataList.length)}</li>`
 
     });
 
@@ -45,7 +45,18 @@
     return `<ul class="reset-list stock-list">${stockListElm}</ul>`;
   }
 
-  function createStock(stockData) {
+  function isDisabled(direction, index, lastIndex) {
+    if (direction === 'up' && index === 0) {
+      return 'disabled';
+    }
+
+    if (direction === 'down' && index === lastIndex) {
+      return 'disabled';
+    }
+    return "";
+  }
+
+  function createStock(stockData, index, last) {
     return `
       <span class="stock-name">
         <span>${stockData.Symbol}</span>
@@ -55,8 +66,8 @@
         <span class="stock-data">${(Math.round(stockData.LastTradePriceOnly * 100) / 100).toFixed(2)}</span>
         <button class="${buttonColor(stockData)} change-button" data-changeable="PercentChange" id="${stockData.Symbol}">${stockData.PercentChange}</button>
         <span class="upDown">
-          <button class="icon-arrow up"></button>
-          <button class="icon-arrow down"></button>
+          <button class="icon-arrow up" ${isDisabled('up', index, last - 1)} ></button>
+          <button class="icon-arrow down" ${isDisabled('down', index, last - 1)}></button>
         </span>
        </div>
    `;
@@ -127,7 +138,7 @@
 
     changeButton.dataset.changeable = nextDisplayedData;
     let nextValToDisplay = selectedStockItem[nextDisplayedData];
-    if(nextDisplayedData !== 'PercentChange') {
+    if (nextDisplayedData !== 'PercentChange') {
       nextValToDisplay = (Math.round(selectedStockItem[nextDisplayedData] * 100) / 100).toFixed(2);
     }
     changeButton.innerHTML = nextValToDisplay;

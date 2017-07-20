@@ -74,8 +74,7 @@ header {
   align-items: center;
 }
 
-.stock-list li:last-of-type .down,
-.stock-list li:first-of-type .up{
+.upDown button:disabled{
   color:rgba(171, 171, 171, 0.2);
 }
 
