@@ -100,14 +100,12 @@
           ${createMain(stockData)}`;
   }
 
-  function addEventListner() {
+  function addEventListener() {
     //on click => switch the daily change
     const buttons = document.querySelectorAll('.change-button');
     Array.prototype.forEach.call(buttons, function (buttonElm) {
       buttonElm.addEventListener('click', changeButtonHandler);
     });
-
-
   }
 
   function getStockBySymbol(symbol) {
@@ -123,14 +121,18 @@
     const curDisplayedData = buttonElm.dataset.changeable;
     const nextDisplayedData = situationMap[curDisplayedData];
 
-    buttonElm.dataset.changeble = nextDisplayedData;
-    buttonElm.innerHTML = selectedStockItem[nextDisplayedData];
+    buttonElm.dataset.changeable = nextDisplayedData;
+    let nextValToDisplay = selectedStockItem[nextDisplayedData];
+    if(nextDisplayedData !== 'PercentChange') {
+      nextValToDisplay = (Math.round(selectedStockItem[nextDisplayedData] * 100) / 100).toFixed(2);
+    }
+    buttonElm.innerHTML = nextValToDisplay;
 
   }
 
   const divElm = document.querySelector('.stock-list-page');
   divElm.innerHTML = init(stocksData);
-  addEventListner();
+  addEventListener();
 
 
 }())
