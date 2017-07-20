@@ -42,6 +42,7 @@ header {
   height: 128px;
   padding-right: 30px;
   padding-left: 30px;
+  align-items: center;
 
 
 }
@@ -73,6 +74,10 @@ header {
   align-items: center;
 }
 
+.stock-list li:last-of-type .down,
+.stock-list li:first-of-type .up{
+  color:rgba(171, 171, 171, 0.2);
+}
 
 .stock-name{
   font-size: 33px;
@@ -87,14 +92,18 @@ header {
 .stock-info{
   display: flex;
   justify-content: space-between;
-  width: 36%;
+  width: 30%;
   align-items: center;
 }
 .stock-info button{
   background: none;
+  border: none;
   border-radius: 5px;
   width: 115px;
   height: 56px;
+  font-size: 24px;
+  font-weight: 300;
+  color: #ffffff;
 }
 
 .stock-info .red{
@@ -110,7 +119,13 @@ header {
   flex-direction: column;
 }
 .upDown button{
-  width: 25px;
-  height: 16px;
-  background-color: #ababab;
+  width: 40px;
+  height: 23px;
+  border: none;
+  color: #ababab;
+  font-size: 133%;
+}
+
+.down{
+  transform: rotate(180deg);
 }

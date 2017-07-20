@@ -5,7 +5,7 @@
     "YHOO"
   ];
 
-  const stockData = [
+  const stocksData = [
     {
       "Symbol": "WIX",
       "Name": "Wix.com Ltd.",
@@ -47,11 +47,11 @@
         <span> (${stockData.Name})</span>
       </span>
       <div class="stock-info">
-        <span class="stock-data">${stockData.LastTradePriceOnly}</span>
-        <button class="${buttonColor(stockData)}">${stockData.PercentChange}</button>
+        <span class="stock-data">${(Math.round(stockData.LastTradePriceOnly * 100) / 100).toFixed(2)}</span>
+        <button class="${buttonColor(stockData)} change-button" data-changeable="PercentChange" id="${stockData.Symbol}">${stockData.PercentChange}</button>
         <span class="upDown">
-          <button class="up"><img src="assets/svg/arrow.svg"></button>
-          <button class="down"><img src="assets/svg/arrow.svg"></button>
+          <button class="icon-arrow up"></button>
+          <button class="icon-arrow down"></button>
         </span>
        </div>
    `;
@@ -94,10 +94,49 @@
     return `${createHeader()}
           ${createMain(stockData)}`;
   }
-  function addListnerEvent() {
-    
+
+  function addEventListner() {
+    //on click => switch the daily change
+    const buttons = document.querySelectorAll('.change-button');
+    Array.prototype.forEach.call(buttons, function (buttonElm) {
+      buttonElm.addEventListener('click', changeButtonHandler);
+    });
+
+
   }
+  function changeButtonHandler(event){
+  //  create situation map
+    //get button's stockElm according to stock id
+    //get state attribute
+    //change inner Html accordingly
+    //update attr
+    const situationMap = {
+      PercentChange : 'Change',
+      Change: 'PercentChange'
+    }
+
+    const buttonElm = event.currentTarget;
+    const buttonId = buttonElm.id;
+
+
+    const selectedStockItem = stocksData.find(function (stockData) {
+      return stockData.Symbol === buttonId;
+    });
+    const curState = buttonElm.dataset.changeable;
+    const nextState = situationMap[curState];
+    buttonElm.dataset.changeble = nextState;
+    buttonElm.innerHTML = selectedStockItem[nextState];
+
+
+  }
+
+
+  // function addListnerEvent() {
+  //   const stock = document.getElementById()
+  // }
   const divElm = document.querySelector('.stock-list-page');
-  divElm.innerHTML = init(stockData);
+  divElm.innerHTML = init(stocksData);
+  addEventListner();
+
 
 }())
