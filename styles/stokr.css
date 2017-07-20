@@ -77,16 +77,24 @@ header {
 .stock-name{
   font-size: 33px;
   font-weight: 300;
+  color: #59737c;
 }
-
+.stock-data{
+  height: 35px;
+  font-size: 30px;
+  color: #59737c;
+}
 .stock-info{
   display: flex;
   justify-content: space-between;
-  width: 33%;
+  width: 36%;
+  align-items: center;
 }
 .stock-info button{
   background: none;
-  border-radius: 10px;
+  border-radius: 5px;
+  width: 115px;
+  height: 56px;
 }
 
 .stock-info .red{
@@ -95,4 +103,14 @@ header {
 
 .stock-info .green{
   background-color: #63da39;
+}
+
+.upDown{
+  display: flex;
+  flex-direction: column;
+}
+.upDown button{
+  width: 25px;
+  height: 16px;
+  background-color: #ababab;
 }
