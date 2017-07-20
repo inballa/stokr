@@ -29,6 +29,11 @@
     }
   ];
 
+  const situationMap = {
+    PercentChange: 'Change',
+    Change: 'PercentChange'
+  }
+
   function generateStockList(stockDataList) {
     let stockListElm = stockDataList.map(function (stock) {
       return `<li id="${stock.Symbol}">${createStock(stock)}</li>`
@@ -104,36 +109,25 @@
 
 
   }
-  function changeButtonHandler(event){
-  //  create situation map
-    //get button's stockElm according to stock id
-    //get state attribute
-    //change inner Html accordingly
-    //update attr
-    const situationMap = {
-      PercentChange : 'Change',
-      Change: 'PercentChange'
-    }
 
-    const buttonElm = event.currentTarget;
-    const buttonId = buttonElm.id;
-
-
-    const selectedStockItem = stocksData.find(function (stockData) {
-      return stockData.Symbol === buttonId;
+  function getStockBySymbol(symbol) {
+    return stocksData.find(function (stockData) {
+      return stockData.Symbol === symbol;
     });
-    const curState = buttonElm.dataset.changeable;
-    const nextState = situationMap[curState];
-    buttonElm.dataset.changeble = nextState;
-    buttonElm.innerHTML = selectedStockItem[nextState];
+  }
 
+  function changeButtonHandler(event) {
+    const buttonElm = event.currentTarget;
+    const selectedStockItem = getStockBySymbol(buttonElm.id);
+
+    const curDisplayedData = buttonElm.dataset.changeable;
+    const nextDisplayedData = situationMap[curDisplayedData];
+
+    buttonElm.dataset.changeble = nextDisplayedData;
+    buttonElm.innerHTML = selectedStockItem[nextDisplayedData];
 
   }
 
-
-  // function addListnerEvent() {
-  //   const stock = document.getElementById()
-  // }
   const divElm = document.querySelector('.stock-list-page');
   divElm.innerHTML = init(stocksData);
   addEventListner();
