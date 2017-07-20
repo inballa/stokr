@@ -115,19 +115,22 @@
   }
 
   function changeButtonHandler(event) {
-    const buttonElm = event.currentTarget;
-    const selectedStockItem = getStockBySymbol(buttonElm.id);
+    const buttonElmList = document.querySelectorAll('.change-button');
+    Array.prototype.forEach.call(buttonElmList, changeButtonData);
+  }
 
-    const curDisplayedData = buttonElm.dataset.changeable;
+  function changeButtonData(changeButton) {
+    const selectedStockItem = getStockBySymbol(changeButton.id);
+
+    const curDisplayedData = changeButton.dataset.changeable;
     const nextDisplayedData = situationMap[curDisplayedData];
 
-    buttonElm.dataset.changeable = nextDisplayedData;
+    changeButton.dataset.changeable = nextDisplayedData;
     let nextValToDisplay = selectedStockItem[nextDisplayedData];
     if(nextDisplayedData !== 'PercentChange') {
       nextValToDisplay = (Math.round(selectedStockItem[nextDisplayedData] * 100) / 100).toFixed(2);
     }
-    buttonElm.innerHTML = nextValToDisplay;
-
+    changeButton.innerHTML = nextValToDisplay;
   }
 
   const divElm = document.querySelector('.stock-list-page');
