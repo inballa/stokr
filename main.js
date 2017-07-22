@@ -170,11 +170,6 @@
   }
 
   function upButtonHandler(event){
-    //get element
-    //get containing li
-    //get brother li from bottom
-    //change the order
-    //if last li change disabled
     const buttonElm = event.currentTarget;
     const bottomLi = buttonElm.parentNode.parentNode.parentNode;
     const topLi = bottomLi.previousSibling;

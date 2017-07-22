@@ -116,11 +116,8 @@ header {
   background-color: #63da39;
 }
 
-.upDown{
-  display: flex;
-  flex-direction: column;
-}
 .upDown button{
+  display: block;
   width: 40px;
   height: 23px;
   border: none;
@@ -128,6 +125,10 @@ header {
   font-size: 133%;
 }
 
+.upDown button:focus,
+.upDown button:hover{
+  outline: none;
+}
 .down-button{
   transform: rotate(180deg);
 }
