@@ -66,8 +66,8 @@
         <span class="stock-data">${(Math.round(stockData.LastTradePriceOnly * 100) / 100).toFixed(2)}</span>
         <button class="${buttonColor(stockData)} change-button" data-changeable="PercentChange" id="${stockData.Symbol}">${stockData.PercentChange}</button>
         <span class="upDown">
-          <button class="icon-arrow up" ${isDisabled('up', index, last - 1)} ></button>
-          <button class="icon-arrow down" ${isDisabled('down', index, last - 1)}></button>
+          <button class="icon-arrow up-button" ${isDisabled('up', index, last - 1)} ></button>
+          <button class="icon-arrow down-button" ${isDisabled('down', index, last - 1)}></button>
         </span>
        </div>
    `;
@@ -87,16 +87,16 @@
     <h1>STOKR</h1>
     <ul class="menu reset-list">
       <li>
-        <button><img src="assets/svg/search.svg"></button>
+        <button class="icon-search-place-holder"></button>
       </li>
       <li>
-        <button><img src="assets/svg/refresh.svg"></button>
+        <button class="icon-refresh"></button>
       </li>
       <li>
-        <button><img src="assets/svg/filter.svg"></button>
+        <button class="icon-filter"></button>
       </li>
       <li>
-        <button><img src="assets/svg/settings.svg"></button>
+        <button class="icon-settings"></button>
       </li>
     </ul>
   </header>`;
@@ -111,11 +111,18 @@
           ${createMain(stockData)}`;
   }
 
-  function addEventListener() {
+  function addChangeEventListener() {
     //on click => switch the daily change
     const buttons = document.querySelectorAll('.change-button');
     Array.prototype.forEach.call(buttons, function (buttonElm) {
       buttonElm.addEventListener('click', changeButtonHandler);
+    });
+  }
+
+  function addUpEventListener(){
+    const buttons = document.querySelectorAll('.down-button');
+    Array.prototype.forEach.call(buttons, function (buttonElm) {
+      buttonElm.addEventListener('click', upButtonHandler);
     });
   }
 
@@ -128,6 +135,30 @@
   function changeButtonHandler(event) {
     const buttonElmList = document.querySelectorAll('.change-button');
     Array.prototype.forEach.call(buttonElmList, changeButtonData);
+  }
+
+  function upButtonHandler(event) {
+    //get element
+    //get containing li
+    //get brother li from bottom
+    //change the order
+    //if last li change disabled
+    const buttonElm = event.currentTarget;
+    const containingLi = buttonElm.parentNode.parentNode.parentNode;
+    const brotherLi = containingLi.nextSibling;
+    const listElm = containingLi.parentNode;
+    listElm.insertBefore(brotherLi, containingLi);
+
+    if(containingLi.nextSibling === null){
+      buttonElm.disabled = true;
+      brotherLi.querySelector('.down-button').disabled = false;
+    }
+
+    const upButton = containingLi.querySelector('.up-button');
+    if(upButton.disabled === true){
+      upButton.disabled = false;
+      brotherLi.querySelector('.up-button').disabled = true;
+    }
   }
 
   function changeButtonData(changeButton) {
@@ -146,7 +177,8 @@
 
   const divElm = document.querySelector('.stock-list-page');
   divElm.innerHTML = init(stocksData);
-  addEventListener();
+  addChangeEventListener();
+  addUpEventListener();
 
 
 }())

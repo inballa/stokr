@@ -50,11 +50,14 @@ header {
 .menu {
   display: flex;
   align-items: flex-start;
+  font-size: 2em;
 }
 
 .menu button{
   border: none;
   background: none;
+  color: #ababab;
+
 }
 .menu img{
   height: 42px;
@@ -99,7 +102,7 @@ header {
   border: none;
   border-radius: 5px;
   width: 115px;
-  height: 56px;
+  height: 45px;
   font-size: 24px;
   font-weight: 300;
   color: #ffffff;
@@ -125,6 +128,6 @@ header {
   font-size: 133%;
 }
 
-.down{
+.down-button{
   transform: rotate(180deg);
 }
