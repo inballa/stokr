@@ -119,12 +119,21 @@
     });
   }
 
-  function addUpEventListener(){
+  function addDownEventListener(){
     const buttons = document.querySelectorAll('.down-button');
     Array.prototype.forEach.call(buttons, function (buttonElm) {
-      buttonElm.addEventListener('click', upButtonHandler);
+      buttonElm.addEventListener('click', downButtonHandler);
     });
   }
+
+  function addUpEventListener(){
+    const buttons = document.querySelectorAll('.up-button');
+    Array.prototype.forEach.call(buttons, function (upElm) {
+      upElm.addEventListener('click', upButtonHandler);
+    });
+  }
+
+
 
   function getStockBySymbol(symbol) {
     return stocksData.find(function (stockData) {
@@ -132,33 +141,45 @@
     });
   }
 
-  function changeButtonHandler(event) {
+  function changeButtonHandler() {
     const buttonElmList = document.querySelectorAll('.change-button');
     Array.prototype.forEach.call(buttonElmList, changeButtonData);
   }
 
-  function upButtonHandler(event) {
+  function replaceLi(topLi, bottomLi){
+    const listElm = topLi.parentNode;
+    listElm.insertBefore(bottomLi, topLi);
+
+    if(topLi.nextSibling === null){
+      topLi.querySelector('.down-button').disabled = true;
+      bottomLi.querySelector('.down-button').disabled = false;
+    }
+
+    const upButton = topLi.querySelector('.up-button');
+    if(upButton.disabled === true){
+      upButton.disabled = false;
+      bottomLi.querySelector('.up-button').disabled = true;
+    }
+  }
+
+  function downButtonHandler(event) {
+    const buttonElm = event.currentTarget;
+    const topLi = buttonElm.parentNode.parentNode.parentNode;
+    const bottomLi = topLi.nextSibling;
+    replaceLi(topLi, bottomLi);
+  }
+
+  function upButtonHandler(event){
     //get element
     //get containing li
     //get brother li from bottom
     //change the order
     //if last li change disabled
     const buttonElm = event.currentTarget;
-    const containingLi = buttonElm.parentNode.parentNode.parentNode;
-    const brotherLi = containingLi.nextSibling;
-    const listElm = containingLi.parentNode;
-    listElm.insertBefore(brotherLi, containingLi);
+    const bottomLi = buttonElm.parentNode.parentNode.parentNode;
+    const topLi = bottomLi.previousSibling;
+    replaceLi(topLi, bottomLi);
 
-    if(containingLi.nextSibling === null){
-      buttonElm.disabled = true;
-      brotherLi.querySelector('.down-button').disabled = false;
-    }
-
-    const upButton = containingLi.querySelector('.up-button');
-    if(upButton.disabled === true){
-      upButton.disabled = false;
-      brotherLi.querySelector('.up-button').disabled = true;
-    }
   }
 
   function changeButtonData(changeButton) {
@@ -178,6 +199,7 @@
   const divElm = document.querySelector('.stock-list-page');
   divElm.innerHTML = init(stocksData);
   addChangeEventListener();
+  addDownEventListener();
   addUpEventListener();
 
 
