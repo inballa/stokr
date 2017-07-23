@@ -37,7 +37,7 @@
 
   function generateStockList(stockDataList) {
     let stockListElm = stockDataList.map(function (stock, index) {
-      return `<li id="${stock.Symbol}">${createStock(stock, index, stockDataList.length)}</li>`
+      return `<li data-id="${stock.Symbol}">${createStock(stock, index, stockDataList.length)}</li>`
 
     });
 
@@ -46,7 +46,7 @@
     return `<ul class="reset-list stock-list">${stockListElm}</ul>`;
   }
 
-  function isDisabled(direction, index, lastIndex) {
+  function toggleDisabled(direction, index, lastIndex) {
     if (direction === 'up' && index === 0) {
       return 'disabled';
     }
@@ -65,10 +65,16 @@
       </span>
       <div class="stock-info">
         <span class="stock-data">${(Math.round(stockData.LastTradePriceOnly * 100) / 100).toFixed(2)}</span>
-        <button class="${buttonColor(stockData)} change-button" data-changeable="PercentChange" id="${stockData.Symbol}">${stockData.PercentChange}</button>
+        <button class="${buttonColor(stockData)} js-change-button"
+                data-changeable="PercentChange"
+                id="${stockData.Symbol}">
+          ${stockData.PercentChange}
+        </button>
         <span class="upDown">
-          <button class="icon-arrow up-button" ${isDisabled('up', index, last - 1)} ></button>
-          <button class="icon-arrow down-button" ${isDisabled('down', index, last - 1)}></button>
+          <button class="icon-arrow up-button" ${toggleDisabled('up', index, last - 1)}
+                  data-type="arrow" data-direction="up"></button>
+          <button class="icon-arrow down-button" ${toggleDisabled('down', index, last - 1)} 
+                  data-type="arrow" data-direction="down"></button>
         </span>
        </div>
    `;
@@ -107,34 +113,6 @@
     return `<main>${generateStockList(stockData)}</main>`;
   }
 
-  function init(stockData) {
-    return `${createHeader()}
-          ${createMain(stockData)}`;
-  }
-
-  function addChangeEventListener() {
-    //on click => switch the daily change
-    const buttons = document.querySelectorAll('.change-button');
-    Array.prototype.forEach.call(buttons, function (buttonElm) {
-      buttonElm.addEventListener('click', changeButtonHandler);
-    });
-  }
-
-  function addDownEventListener(){
-    const buttons = document.querySelectorAll('.down-button');
-    Array.prototype.forEach.call(buttons, function (buttonElm) {
-      buttonElm.addEventListener('click', downButtonHandler);
-    });
-  }
-
-  function addUpEventListener(){
-    const buttons = document.querySelectorAll('.up-button');
-    Array.prototype.forEach.call(buttons, function (upElm) {
-      upElm.addEventListener('click', upButtonHandler);
-    });
-  }
-
-
 
   function getStockBySymbol(symbol) {
     return stocksData.find(function (stockData) {
@@ -143,40 +121,45 @@
   }
 
   function changeButtonHandler() {
-    const buttonElmList = document.querySelectorAll('.change-button');
+    const buttonElmList = document.querySelectorAll('.js-change-button');
     Array.prototype.forEach.call(buttonElmList, changeButtonData);
   }
 
-  function replaceLi(topLi, bottomLi){
-    const listElm = topLi.parentNode;
-    listElm.insertBefore(bottomLi, topLi);
+  function reorderStocks(index, direction) {
+    console.log(index, direction);
+    const tmp = stocksData[index];
 
-    if(topLi.nextSibling === null){
-      topLi.querySelector('.down-button').disabled = true;
-      bottomLi.querySelector('.down-button').disabled = false;
+    const secondIndex = direction === 'up' ? index - 1 : index + 1;
+    stocksData[index] = stocksData[secondIndex];
+    stocksData[secondIndex] = tmp;
+    render();
+
+  }
+
+  function setupEventListeners() {
+    const mainElm = document.querySelector('main');
+
+    mainElm.addEventListener('click', handelMainClick);
+  }
+
+  function handelMainClick(event) {
+    const clickedElm = event.target;
+
+    if (clickedElm.classList.contains('js-change-button')) {
+      changeButtonHandler();
+      return;
     }
 
-    const upButton = topLi.querySelector('.up-button');
-    if(upButton.disabled === true){
-      upButton.disabled = false;
-      bottomLi.querySelector('.up-button').disabled = true;
+    if(clickedElm.dataset.type === 'arrow'){
+      const symbol = clickedElm.closest('li').dataset.id;
+      const index = stocksData.findIndex((stockData) => {
+        return stockData.Symbol === symbol;
+      });
+      reorderStocks(index,clickedElm.dataset.direction);
+      return;
     }
   }
 
-  function downButtonHandler(event) {
-    const buttonElm = event.currentTarget;
-    const topLi = buttonElm.parentNode.parentNode.parentNode;
-    const bottomLi = topLi.nextSibling;
-    replaceLi(topLi, bottomLi);
-  }
-
-  function upButtonHandler(event){
-    const buttonElm = event.currentTarget;
-    const bottomLi = buttonElm.parentNode.parentNode.parentNode;
-    const topLi = bottomLi.previousSibling;
-    replaceLi(topLi, bottomLi);
-
-  }
 
   function changeButtonData(changeButton) {
     const selectedStockItem = getStockBySymbol(changeButton.id);
@@ -192,11 +175,13 @@
     changeButton.innerHTML = nextValToDisplay;
   }
 
-  const divElm = document.querySelector('.stock-list-page');
-  divElm.innerHTML = init(stocksData);
-  addChangeEventListener();
-  addDownEventListener();
-  addUpEventListener();
+  function render() {
+    const divElm = document.querySelector('.stock-list-page');
+    divElm.innerHTML = `${createHeader()} ${createMain(stocksData)}`;
 
+    setupEventListeners();
+  }
 
-}())
+  render();
+
+}());
