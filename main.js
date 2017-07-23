@@ -1,4 +1,5 @@
 (function () {
+  'use strict'
   const stockSymbbole = [
     "WIX",
     "MSFT",
@@ -87,7 +88,7 @@
     <h1>STOKR</h1>
     <ul class="menu reset-list">
       <li>
-        <button class="icon-search-place-holder"></button>
+        <button class="icon-search"></button>
       </li>
       <li>
         <button class="icon-refresh"></button>
