@@ -1,39 +1,14 @@
 (function () {
-  'use strict'
-  const stockSymbbole = [
-    "WIX",
-    "MSFT",
-    "YHOO"
-  ];
+  'use strict';
 
-  const stocksData = [
-    {
-      "Symbol": "WIX",
-      "Name": "Wix.com Ltd.",
-      "Change": "0.750000",
-      "PercentChange": "+1.51%",
-      "LastTradePriceOnly": "76.099998"
-    },
-    {
-      "Symbol": "MSFT",
-      "Name": "Microsoft Corporation",
-      "PercentChange": "-2.09%",
-      "Change": "-0.850006",
-      "LastTradePriceOnly": "69.620003"
-    },
-    {
-      "Symbol": "YHOO",
-      "Name": "Yahoo! Inc.",
-      "Change": "0.279999",
-      "PercentChange": "+1.11%",
-      "LastTradePriceOnly": "50.599998"
-    }
-  ];
+  window.Stokr = window.Stokr || {};
+
+  const Model = window.Stokr.Model;
 
   const situationMap = {
     PercentChange: 'Change',
     Change: 'PercentChange'
-  }
+  };
 
   function generateStockList(stockDataList) {
     let stockListElm = stockDataList.map(function (stock, index) {
@@ -113,13 +88,6 @@
     return `<main>${generateStockList(stockData)}</main>`;
   }
 
-
-  function getStockBySymbol(symbol) {
-    return stocksData.find(function (stockData) {
-      return stockData.Symbol === symbol;
-    });
-  }
-
   function changeButtonHandler() {
     const buttonElmList = document.querySelectorAll('.js-change-button');
     Array.prototype.forEach.call(buttonElmList, changeButtonData);
@@ -139,7 +107,7 @@
   function setupEventListeners() {
     const mainElm = document.querySelector('main');
 
-    mainElm.addEventListener('click', handelMainClick);
+    mainElm.addEventListener('click', window.Stokr.Ctrl.handelMainClick);
   }
 
   function handelMainClick(event) {
@@ -150,25 +118,27 @@
       return;
     }
 
-    if(clickedElm.dataset.type === 'arrow'){
+    if (clickedElm.dataset.type === 'arrow') {
       const symbol = clickedElm.closest('li').dataset.id;
       const index = stocksData.findIndex((stockData) => {
         return stockData.Symbol === symbol;
       });
-      reorderStocks(index,clickedElm.dataset.direction);
+      reorderStocks(index, clickedElm.dataset.direction);
       return;
     }
   }
 
 
   function changeButtonData(changeButton) {
-    const selectedStockItem = getStockBySymbol(changeButton.id);
+    const selectedStockItem = Model.getStockBySymbol(changeButton.id);
 
     const curDisplayedData = changeButton.dataset.changeable;
     const nextDisplayedData = situationMap[curDisplayedData];
 
     changeButton.dataset.changeable = nextDisplayedData;
+
     let nextValToDisplay = selectedStockItem[nextDisplayedData];
+
     if (nextDisplayedData !== 'PercentChange') {
       nextValToDisplay = (Math.round(selectedStockItem[nextDisplayedData] * 100) / 100).toFixed(2);
     }
@@ -176,6 +146,9 @@
   }
 
   function render() {
+    const state = Model.getState();
+    const stocksData = state.stocks;
+
     const divElm = document.querySelector('.stock-list-page');
     divElm.innerHTML = `${createHeader()} ${createMain(stocksData)}`;
 
@@ -184,4 +157,9 @@
 
   render();
 
+  window.Stokr.Ctrl = {
+
+  }
+
 }());
+
