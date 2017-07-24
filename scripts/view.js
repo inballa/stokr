@@ -48,29 +48,10 @@
 
     if (clickedElm.dataset.type === 'arrow') {
       const symbol = clickedElm.closest('li').dataset.id;
-      const index = Model.getState().stocks.findIndex((stockData) => {
-        return stockData.Symbol === symbol;
-      });
-      reorderStocks(index, clickedElm.dataset.direction);
+      window.Stokr.Ctrl.reorderStocks(symbol, clickedElm.dataset.direction);
       return;
     }
   }
-
-  // function changeButtonData(changeButton) {
-  //   const selectedStockItem = getStockBySymbol(changeButton.id);
-  //
-  //   const curDisplayedData = changeButton.dataset.changeable;
-  //   const nextDisplayedData = situationMap[curDisplayedData];
-  //
-  //   changeButton.dataset.changeable = nextDisplayedData;
-  //
-  //   let nextValToDisplay = selectedStockItem[nextDisplayedData];
-  //
-  //   if (nextDisplayedData !== 'PercentChange') {
-  //     nextValToDisplay = (Math.round(selectedStockItem[nextDisplayedData] * 100) / 100).toFixed(2);
-  //   }
-  //   changeButton.innerHTML = nextValToDisplay;
-  // }
 
   function changeButtonHandler() {
     const buttonElmList = document.querySelectorAll('.js-change-button');
@@ -129,10 +110,6 @@
         </span>
        </div>
    `;
-  }
-
-  function getStockDataChange(){
-
   }
 
   function buttonColor(stockData) {

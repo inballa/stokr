@@ -7,26 +7,20 @@
   const View = window.Stokr.View;
 
 
-  function reorderStocks(index, direction) {
+  function reorderStocks(symbol, direction) {
     const stocksData = Model.getState().stocks;
+    const index = stocksData.findIndex((stockData) => {
+      return stockData.Symbol === symbol;
+    });
     console.log(index, direction);
     const tmp = stocksData[index];
 
     const secondIndex = direction === 'up' ? index - 1 : index + 1;
     stocksData[index] = stocksData[secondIndex];
     stocksData[secondIndex] = tmp;
-    render();
+    renderView();
 
   }
-
-
-
-  // function getStockBySymbol(symbol) {
-  //   return Model.getState().stocks.find(function (stockData) {
-  //     return stockData.Symbol === symbol;
-  //   });
-  // }
-
 
   function toggleChangeButton() {
     const state = Model.getState();
@@ -45,6 +39,7 @@
 
   window.Stokr.Ctrl = {
     toggleChangeButton,
+    reorderStocks
   };
 
   renderView();
