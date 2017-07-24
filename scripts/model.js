@@ -4,6 +4,13 @@
   window.Stokr = window.Stokr || {};
 
   const state = {
+    ui: {
+      stockMode: 0,
+      isFiltersShown: false,
+      filters: {
+
+      }
+    },
     stocks: [
       {
         "Symbol": "WIX",
@@ -29,11 +36,6 @@
     ]
   };
 
-  function getStockBySymbol(symbol) {
-    return state.stocks.find(function (stockData) {
-      return stockData.Symbol === symbol;
-    });
-  }
 
   function getState() {
     return state;
@@ -41,7 +43,6 @@
 
   window.Stokr.Model = {
     getState,
-    getStockBySymbol
   };
 
 }());
