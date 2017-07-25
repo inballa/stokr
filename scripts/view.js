@@ -1,3 +1,8 @@
+// add event listener to filter
+//add event handler that calls the ctrl
+//ctrl change data filter
+//rerender
+
 (function () {
   'use strict';
 
@@ -8,7 +13,7 @@
     1: 'Change'
   };
 
-  function createHeader() {
+  function createHeader(isFilterShown) {
     return `<header>
       <h1>STOKR</h1>
       <ul class="menu reset-list">
@@ -19,12 +24,14 @@
           <button class="icon-refresh"></button>
         </li>
         <li>
-          <button class="icon-filter"></button>
+          <button class="icon-filter filter"></button>
         </li>
         <li>
           <button class="icon-settings"></button>
         </li>
       </ul>
+      <!--?????????/del?????-->
+      ${isFilterShown ? renderForm(): ''}
     </header>`;
   }
 
@@ -34,8 +41,22 @@
 
   function setupEventListeners() {
     const mainElm = document.querySelector('main');
+    const filterButton = document.querySelector('.filter');
+    const applyButton = document.querySelector('apply-filter')
 
     mainElm.addEventListener('click', handelMainClick);
+    filterButton.addEventListener('click', filterModeHandler);
+    //change to submit?????????????????????????/
+    applyButton.addEventListener('click', filterHandler)
+  }
+
+  // function filterHandler() {
+  //   const formElm =
+  // }
+
+
+  function filterModeHandler() {
+    window.Stokr.Ctrl.changeFilterMode();
   }
 
   function handelMainClick(event) {
@@ -88,7 +109,7 @@
   function createStock(stockData, index, last, uiState) {
     const stockChange = getStockChange(uiState.stockMode);
     let change = stockData[stockChange];
-    if(uiState.stockMode !== 0){
+    if (uiState.stockMode !== 0) {
       change = (Math.round(change * 100) / 100).toFixed(2);
     }
     return `
@@ -112,6 +133,32 @@
    `;
   }
 
+  function renderForm() {
+    return `<form class="filter-fields">
+              <div class="filter-criteria">
+                <label for="nameFilter">ByName</label>
+                <input type="text" id="nameFilter">
+              </div>
+              <div class="filter-criteria">
+                <label for="select-gain">By Gain</label>
+                <select id="select-gain"> 
+                  <option value="All" selected>All</option> 
+                  <option value="Losing" >Losing</option>
+                  <option value="Gaining">Gaining</option>
+                </select>
+              </div>
+              <div class="filter-criteria">
+                <label for="range-from">By Range: From</label>
+                <input type="number" id="range-from">
+              </div>
+              <div class="filter-criteria">
+                <label for="range-to">By Range: To</label>
+                <input type="number" id="range-to">
+              </div>
+              <button class="apply-filter">Apply</button>
+            </form>`
+  }
+
   function buttonColor(stockData) {
     if (stockData.Change >= 0) {
       return 'green';
@@ -123,7 +170,7 @@
 
   function render(stocks, uiState) {
     const divElm = document.querySelector('.stock-list-page');
-    divElm.innerHTML = `${createHeader()} ${createMain(stocks, uiState)}`;
+    divElm.innerHTML = `${createHeader(uiState.isFiltersShown)} ${createMain(stocks, uiState)}`;
     setupEventListeners();
   }
 

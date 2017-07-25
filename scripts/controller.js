@@ -34,12 +34,17 @@
     const stocks = state.stocks;
     const uiState = state.ui;
     View.render(stocks, uiState);
+  }
 
+  function changeFilterMode() {
+    Model.getState().ui.isFiltersShown = !Model.getState().ui.isFiltersShown === true;
+    renderView();
   }
 
   window.Stokr.Ctrl = {
     toggleChangeButton,
-    reorderStocks
+    reorderStocks,
+    changeFilterMode,
   };
 
   renderView();

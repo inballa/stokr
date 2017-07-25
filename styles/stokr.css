@@ -36,10 +36,10 @@ h1 {
 header {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   background-color: white;
   margin-bottom: 1px;
   border-bottom: 1px solid #e5e5e5;
-  height: 128px;
   padding-right: 30px;
   padding-left: 30px;
   align-items: center;
@@ -132,3 +132,48 @@ header {
 .down-button{
   transform: rotate(180deg);
 }
+
+.filter-fields{
+  width: 100%;
+  display: flex;
+  height: 161px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 26px;
+  color: #59737c;
+  justify-content: space-between;
+  align-content: space-between;
+  padding: 14px;
+  border-top: 1px solid #e5e5e5;
+
+}
+
+.filter-fields input,
+.filter-fields select{
+  width: 24vw;
+  height: 55px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  border: solid 1px #e0e0e0;
+
+
+}
+
+.filter-fields label{
+  width: 116px;
+  height: 31px;
+}
+.filter-criteria{
+  display: flex;
+  justify-content: space-between;
+}
+
+.apply-filter{
+  width: 120px;
+  height: 111px;
+  border: solid #247906 1px;
+  color: white;
+  background: #41bf15;
+  border-radius: 59px / 55px
+}
+
