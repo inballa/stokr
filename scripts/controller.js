@@ -33,18 +33,14 @@
     renderView(Model.getState().stocks);
   }
 
-  //
-  // selected>All</option>
-  // <option value="Losing" >Losing</option>
-  //   <option value="Gaining">Gaining</option>
-
+  
   function filterStocks(name, gain, rangeFrom, rangeTo) {
     const stocks = Model.getState().stocks;
     Model.getState().filteredStocks = stocks.filter((stockData) => {
       const containsName = stockData.Symbol.indexOf(name) !== -1 || stockData.Name.indexOf(name) !== -1;
-      // const gainBool = gain === 'Losing' && stockData.c;
-      // if(gain === )
-      return containsName;
+      const gainBool = (gain === 'Losing' && parseFloat(stockData.Change) < 0) || (gain === 'Gaining' && parseFloat(stockData.Change) > 0) ;
+
+      return containsName && gainBool;
     })
     renderView(Model.getState().filteredStocks);
   }
