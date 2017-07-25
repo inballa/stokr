@@ -33,16 +33,33 @@
     renderView(Model.getState().stocks);
   }
 
-  
+
   function filterStocks(name, gain, rangeFrom, rangeTo) {
     const stocks = Model.getState().stocks;
     Model.getState().filteredStocks = stocks.filter((stockData) => {
       const containsName = stockData.Symbol.indexOf(name) !== -1 || stockData.Name.indexOf(name) !== -1;
-      const gainBool = (gain === 'Losing' && parseFloat(stockData.Change) < 0) || (gain === 'Gaining' && parseFloat(stockData.Change) > 0) ;
-
-      return containsName && gainBool;
+      const gainBool = (gain === 'Losing' && parseFloat(stockData.Change) < 0) || (gain === 'Gaining' && parseFloat(stockData.Change) > 0);
+      let boolFrom = true;
+      let boolTo = true;
+      // const percentChange = stockData.PercentChange.substring(0, stockData.PercentChange.length - 1);
+      // if (rangeFrom !== '') {
+      //   boolFrom = Number(percentChange) > rangeFrom;
+      // }
+      // if (rangeTo !== '') {
+      //   boolTo = Number(percentChange) < rangeTo;
+      // }
+      return containsName && gainBool && boolTo && boolFrom;
     })
     renderView(Model.getState().filteredStocks);
+  }
+
+  function fetchStocks() {
+    fetch('mocks/stocks.json').then(stocksData => {
+      return stocksData.json();
+    }).then(stocksList => {
+      Model.getState().stocks = stocksList;
+      renderView(Model.getState().stocks);
+    })
   }
 
   function renderView(stocks) {
@@ -58,7 +75,7 @@
     filterStocks,
   };
 
-  renderView(Model.getState().stocks);
+  fetchStocks();
 
 
 }());
