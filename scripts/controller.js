@@ -33,33 +33,54 @@
     renderView(Model.getState().stocks);
   }
 
+  function passNameFilter(stock, name) {
+    const symbol = stock.Symbol.toLowerCase();
+    const stockName = stock.Name.toLowerCase();
+    const nameFilter = name.toLowerCase();
+    return symbol.indexOf(nameFilter) !== -1 || stockName.indexOf(nameFilter) !== -1;
+  }
 
-  function filterStocks(name, gain, rangeFrom, rangeTo) {
+  function passGainFilter(stock, gain) {
+    return gain === "All" || (gain === 'Losing' && parseFloat(stock.Change) < 0) ||
+      (gain === 'Gaining' && parseFloat(stock.Change) > 0);
+  }
+
+  function inRange(stock, from, to) {
+    let rangeFrom = true;
+    let rangeTo = true;
+    if (from !== '') {
+      rangeFrom = Number(stock.PercentChange) > Number(from);
+    }
+    if (to !== '') {
+      rangeTo = Number(stock.PercentChange) < Number(rangeTo);
+    }
+
+    return rangeFrom && rangeTo;
+  }
+
+  //refactor to outer func
+  // function filterStocks(name, gain, rangeFrom, rangeTo) {
+  function filterStocks(filter) {
+    Model.getState().ui.filters = filter;
+
     const stocks = Model.getState().stocks;
+
     Model.getState().filteredStocks = stocks.filter((stockData) => {
-      const containsName = stockData.Symbol.indexOf(name) !== -1 || stockData.Name.indexOf(name) !== -1;
-      const gainBool = (gain === 'Losing' && parseFloat(stockData.Change) < 0) || (gain === 'Gaining' && parseFloat(stockData.Change) > 0);
-      let boolFrom = true;
-      let boolTo = true;
-      // const percentChange = stockData.PercentChange.substring(0, stockData.PercentChange.length - 1);
-      // if (rangeFrom !== '') {
-      //   boolFrom = Number(percentChange) > rangeFrom;
-      // }
-      // if (rangeTo !== '') {
-      //   boolTo = Number(percentChange) < rangeTo;
-      // }
-      return containsName && gainBool && boolTo && boolFrom;
+      const containsName = passNameFilter(stockData, filter.name);
+      const gainBool = passGainFilter(stockData, filter.gain);
+      const range = inRange(stockData, filter.rangeFrom, filter.rangeTo);
+      // const filterConditions = [containsName, gainBool, range];
+      //Array.every/////////////
+      // return filterConditions.every(val => {val === true});
+      return containsName && gainBool && range;
     })
+    console.log(Model.getState().filteredStocks);
     renderView(Model.getState().filteredStocks);
   }
 
-  function fetchStocks() {
-    fetch('mocks/stocks.json').then(stocksData => {
-      return stocksData.json();
-    }).then(stocksList => {
-      Model.getState().stocks = stocksList;
-      renderView(Model.getState().stocks);
-    })
+  function onRouteChange() {
+    Model.getState().stocks = stocksList;
+    renderView(Model.getState().stocks);
   }
 
   function renderView(stocks) {
@@ -73,9 +94,23 @@
     reorderStocks,
     changeFilterMode,
     filterStocks,
+    onRouteChange,
   };
 
-  fetchStocks();
+  function fetchStocks() {
+    return fetch('mocks/stocks.json').then(stocksData => {
+      return stocksData.json();
+    });
+  }
+
+  function init() {
+    fetchStocks().then(stocksList => {
+      Model.getState().stocks = stocksList;
+      renderView(Model.getState().stocks);
+    })
+  }
+
+  init();
 
 
 }());

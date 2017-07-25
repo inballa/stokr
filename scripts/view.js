@@ -1,7 +1,3 @@
-// add event listener to filter
-//add event handler that calls the ctrl
-//ctrl change data filter
-//rerender
 
 (function () {
   'use strict';
@@ -18,7 +14,7 @@
       <h1>STOKR</h1>
       <ul class="menu reset-list">
         <li>
-          <button class="icon-search"></button>
+        <a href="#search" class="icon-search"></a>
         </li>
         <li>
           <button class="icon-refresh"></button>
@@ -42,24 +38,27 @@
   function setupEventListeners() {
     const mainElm = document.querySelector('main');
     const filterButton = document.querySelector('.filter');
-    const applyButton = document.querySelector('.apply-filter')
+    const formElm = document.querySelector('.filter-fields')
 
     mainElm.addEventListener('click', handelMainClick);
     filterButton.addEventListener('click', filterModeHandler);
-    //change to submit?????????????????????????
-    if(applyButton !== null){
-      applyButton.addEventListener('click', filterHandler)
+    if(formElm !== null){
+      formElm.addEventListener('submit', filterHandler)
     }
+    window.addEventListener('hashchange', hashchangeHandler);
   }
 
+  function hashchangeHandler() {
+    window.Ctrl.Stokr.onRouteChange()
+  }
   function filterHandler(event) {
     event.preventDefault();
-    const formElm = event.target.closest('form');
-    const name = formElm.querySelector('.nameFilter').value;
-    const gain = formElm.querySelector('.gainFilter').value;
-    const rangeFrom = formElm.querySelector('.fromFilter').value;
-    const rangeTo = formElm.querySelector('.toFilter').value;
-    window.Stokr.Ctrl.filterStocks(name, gain, rangeFrom, rangeTo);
+    const formElm = event.target.elements;
+    const name = formElm.nameFilter.value;
+    const gain = formElm['select-gain'].value;
+    const rangeFrom = formElm['range-from'].value;
+    const rangeTo = formElm['range-to'].value;
+    window.Stokr.Ctrl.filterStocks({name, gain, rangeFrom, rangeTo});
   }
 
 
@@ -145,11 +144,11 @@
     return `<form class="filter-fields">
               <div class="filter-criteria">
                 <label for="nameFilter">ByName</label>
-                <input type="text" id="nameFilter" class="nameFilter">
+                <input type="text" id="nameFilter" name="nameFilter">
               </div>
               <div class="filter-criteria">
                 <label for="select-gain">By Gain</label>
-                <select id="select-gain" class="gainFilter"> 
+                <select id="select-gain" name="select-gain"> 
                   <option value="All" selected>All</option> 
                   <option value="Losing" >Losing</option>
                   <option value="Gaining">Gaining</option>
@@ -157,11 +156,11 @@
               </div>
               <div class="filter-criteria">
                 <label for="range-from">By Range: From</label>
-                <input type="number" id="range-from" class="fromFilter">
+                <input type="number" id="range-from" name="range-from">
               </div>
               <div class="filter-criteria">
                 <label for="range-to">By Range: To</label>
-                <input type="number" id="range-to" class="toFilter">
+                <input type="number" id="range-to" class="range-to">
               </div>
               <button class="apply-filter">Apply</button>
             </form>`
@@ -176,10 +175,26 @@
     }
   }
 
-  function render(stocks, uiState) {
+  function renderHome(stocks, uiState) {
     const divElm = document.querySelector('.stock-list-page');
     divElm.innerHTML = `${createHeader(uiState.isFiltersShown)} ${createMain(stocks, uiState)}`;
     setupEventListeners();
+  }
+
+  function renderSearch(stocks, uiState){
+    return `<header>searching
+            <a href="#">Home</a>
+            </header>`
+  }
+
+  function render(stocks, uiState) {
+    const hashUrl  =  window.location.hash.slice(1);
+    if(hashUrl === ''){
+      renderHome(stocks, uiState);
+    }
+    if(hashUrl === 'search'){
+      renderSearch(stocks, uiState);
+    }
   }
 
   window.Stokr.View = {
