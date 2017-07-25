@@ -8,9 +8,11 @@
       stockMode: 0,
       isFiltersShown: false,
       filters: {
-
+        // name, gain, rangeFrom, rangeTo
       }
     },
+    filteredStocks: [],
+
     stocks: [
       {
         "Symbol": "WIX",

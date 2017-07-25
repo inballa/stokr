@@ -31,7 +31,7 @@
         </li>
       </ul>
       <!--?????????/del?????-->
-      ${isFilterShown ? renderForm(): ''}
+      ${isFilterShown ? renderForm() : ''}
     </header>`;
   }
 
@@ -42,17 +42,25 @@
   function setupEventListeners() {
     const mainElm = document.querySelector('main');
     const filterButton = document.querySelector('.filter');
-    const applyButton = document.querySelector('apply-filter')
+    const applyButton = document.querySelector('.apply-filter')
 
     mainElm.addEventListener('click', handelMainClick);
     filterButton.addEventListener('click', filterModeHandler);
-    //change to submit?????????????????????????/
-    applyButton.addEventListener('click', filterHandler)
+    //change to submit?????????????????????????
+    if(applyButton !== null){
+      applyButton.addEventListener('click', filterHandler)
+    }
   }
 
-  // function filterHandler() {
-  //   const formElm =
-  // }
+  function filterHandler(event) {
+    event.preventDefault();
+    const formElm = event.target.closest('form');
+    const name = formElm.querySelector('.nameFilter').value;
+    const gain = formElm.querySelector('.gainFilter').value;
+    const rangeFrom = formElm.querySelector('.fromFilter').value;
+    const rangeTo = formElm.querySelector('.toFilter').value;
+    window.Stokr.Ctrl.filterStocks(name, gain, rangeFrom, rangeTo);
+  }
 
 
   function filterModeHandler() {
@@ -137,11 +145,11 @@
     return `<form class="filter-fields">
               <div class="filter-criteria">
                 <label for="nameFilter">ByName</label>
-                <input type="text" id="nameFilter">
+                <input type="text" id="nameFilter" class="nameFilter">
               </div>
               <div class="filter-criteria">
                 <label for="select-gain">By Gain</label>
-                <select id="select-gain"> 
+                <select id="select-gain" class="gainFilter"> 
                   <option value="All" selected>All</option> 
                   <option value="Losing" >Losing</option>
                   <option value="Gaining">Gaining</option>
@@ -149,11 +157,11 @@
               </div>
               <div class="filter-criteria">
                 <label for="range-from">By Range: From</label>
-                <input type="number" id="range-from">
+                <input type="number" id="range-from" class="fromFilter">
               </div>
               <div class="filter-criteria">
                 <label for="range-to">By Range: To</label>
-                <input type="number" id="range-to">
+                <input type="number" id="range-to" class="toFilter">
               </div>
               <button class="apply-filter">Apply</button>
             </form>`

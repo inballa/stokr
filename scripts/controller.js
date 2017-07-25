@@ -18,36 +18,51 @@
     const secondIndex = direction === 'up' ? index - 1 : index + 1;
     stocksData[index] = stocksData[secondIndex];
     stocksData[secondIndex] = tmp;
-    renderView();
+    renderView(Model.getState().stocks);
 
   }
 
   function toggleChangeButton() {
     const state = Model.getState();
     state.ui.stockMode = (state.ui.stockMode + 1) % 2;
-    renderView();
-  }
-
-
-  function renderView() {
-    const state = Model.getState();
-    const stocks = state.stocks;
-    const uiState = state.ui;
-    View.render(stocks, uiState);
+    renderView(Model.getState().stocks);
   }
 
   function changeFilterMode() {
     Model.getState().ui.isFiltersShown = !Model.getState().ui.isFiltersShown === true;
-    renderView();
+    renderView(Model.getState().stocks);
+  }
+
+  //
+  // selected>All</option>
+  // <option value="Losing" >Losing</option>
+  //   <option value="Gaining">Gaining</option>
+
+  function filterStocks(name, gain, rangeFrom, rangeTo) {
+    const stocks = Model.getState().stocks;
+    Model.getState().filteredStocks = stocks.filter((stockData) => {
+      const containsName = stockData.Symbol.indexOf(name) !== -1 || stockData.Name.indexOf(name) !== -1;
+      // const gainBool = gain === 'Losing' && stockData.c;
+      // if(gain === )
+      return containsName;
+    })
+    renderView(Model.getState().filteredStocks);
+  }
+
+  function renderView(stocks) {
+    const state = Model.getState();
+    const uiState = state.ui;
+    View.render(stocks, uiState);
   }
 
   window.Stokr.Ctrl = {
     toggleChangeButton,
     reorderStocks,
     changeFilterMode,
+    filterStocks,
   };
 
-  renderView();
+  renderView(Model.getState().stocks);
 
 
 }());
