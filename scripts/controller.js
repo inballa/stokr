@@ -65,8 +65,7 @@
 
     //refactor to outer func
     // function filterStocks(name, gain, rangeFrom, rangeTo) {
-    function gst
-    (filter) {
+    function filterStocks(filter) {
       updateUi('filters', filter);
       const stocks = Model.getState().stocks;
 
@@ -138,7 +137,7 @@
       Model.getState().ui[property] = value;
       console.log(property);
       console.log(value);
-      // console.log(Model.getState().ui[property]);
+      console.log(Model.getState().ui[property]);
       localStorage.setItem('stokr-state', JSON.stringify(Model.getState().ui));
     }
 
