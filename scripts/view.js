@@ -49,7 +49,7 @@
   }
 
   function hashchangeHandler() {
-    window.Ctrl.Stokr.onRouteChange()
+    window.Stokr.Ctrl.onRouteChange()
   }
   function filterHandler(event) {
     event.preventDefault();
@@ -116,8 +116,9 @@
   function createStock(stockData, index, last, uiState) {
     const stockChange = getStockChange(uiState.stockMode);
     let change = stockData[stockChange];
-    if (uiState.stockMode !== 0) {
-      change = (Math.round(change * 100) / 100).toFixed(2);
+    change = (Math.round(change * 100) / 100).toFixed(2);
+    if(stockChange === 'PercentChange'){
+      change = change + '%';
     }
     return `
       <span class="stock-name">
@@ -182,9 +183,12 @@
   }
 
   function renderSearch(stocks, uiState){
-    return `<header>searching
+    const divElm = document.querySelector('.stock-list-page');
+    divElm.innerHTML= `<header>
             <a href="#">Home</a>
-            </header>`
+            </header>`;
+    window.addEventListener('hashchange', hashchangeHandler);
+
   }
 
   function render(stocks, uiState) {

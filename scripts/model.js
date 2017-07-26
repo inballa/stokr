@@ -3,18 +3,20 @@
 
   window.Stokr = window.Stokr || {};
 
-  const state = {
-    ui: {
-      stockMode: 0,
-      isFiltersShown: false,
-      filters: {
-        // name, gain, rangeFrom, rangeTo
-      }
-    },
-    filteredStocks: [],
 
-    stocks:[],
-  };
+  const state = {
+      ui: {
+        stockMode: 0,
+        isFiltersShown: false,
+        filters: {
+          // name, gain, rangeFrom, rangeTo
+        }
+      },
+      filteredStocks: [],
+      symbols: ['WIX', 'MSFT', 'AAPL', 'GOOG', 'AMZN', 'SBUX', 'NKE'],
+      stocks: [],
+    }
+  ;
 
 
   function getState() {

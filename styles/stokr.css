@@ -98,11 +98,11 @@ header {
   height: 35px;
   font-size: 30px;
   color: #59737c;
+  padding-right: 9px;
 }
 .stock-info{
   display: flex;
   justify-content: space-between;
-  width: 30%;
   align-items: center;
 }
 .stock-info button{

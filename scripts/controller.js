@@ -9,15 +9,18 @@
 
   function reorderStocks(symbol, direction) {
     const stocksData = Model.getState().stocks;
+    const stocksSymbol = Model.getState().symbols;
     const index = stocksData.findIndex((stockData) => {
       return stockData.Symbol === symbol;
     });
     console.log(index, direction);
     const tmp = stocksData[index];
-
+    const symbolTmp = stocksSymbol[index];
     const secondIndex = direction === 'up' ? index - 1 : index + 1;
     stocksData[index] = stocksData[secondIndex];
     stocksData[secondIndex] = tmp;
+    stocksSymbol[index] = stocksSymbol[secondIndex];
+    stocksSymbol[secondIndex] = symbolTmp;
     renderView(Model.getState().stocks);
 
   }
@@ -79,7 +82,6 @@
   }
 
   function onRouteChange() {
-    Model.getState().stocks = stocksList;
     renderView(Model.getState().stocks);
   }
 
@@ -96,18 +98,48 @@
     filterStocks,
     onRouteChange,
   };
-
   function fetchStocks() {
-    return fetch('mocks/stocks.json').then(stocksData => {
-      return stocksData.json();
-    });
+    let stockSymbol = Model.getState().symbols.join(',');
+    console.log(stockSymbol);
+    return fetch(`http://localhost:7000/quotes?q=${stockSymbol}`)
+      .then(res => {
+        //add testing ok 200
+        console.log(res);
+        if (res.ok) {
+          return res.json();
+        }
+      });
   }
 
+  function buildStock(stock) {
+    return {
+      "Symbol": stock.symbol,
+      "Name": stock.Name,
+      "PercentChange": stock.realtime_chg_percent,
+      "Change": stock.Change,
+      "LastTradePriceOnly": stock.LastTradePriceOnly,
+      "MarketCapitalization": stock.MarketCapitalization,
+    }
+  }
+
+  // function fetchStocks() {
+  //   return fetch('mocks/stocks.json').then(stocksData => {
+  //     return stocksData.json();
+  //   });
+  // }
+
   function init() {
-    fetchStocks().then(stocksList => {
-      Model.getState().stocks = stocksList;
-      renderView(Model.getState().stocks);
-    })
+    fetchStocks()
+      .then(stocksData => {
+        let stockList = stocksData.query.results.quote;
+        let length = stocksData.query.count;
+        if (length === 1) {
+          stockList = [stockList];
+        }
+        console.log(stockList);
+        Model.getState().stocks = stockList.map(buildStock);
+        renderView(Model.getState().stocks);
+      })
   }
 
   init();
