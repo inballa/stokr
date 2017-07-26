@@ -9,6 +9,10 @@
         stockMode: 0,
         isFiltersShown: false,
         filters: {
+          name: '',
+          gain: 'All',
+          rangeFrom: '',
+          rangeTo: '',
           // name, gain, rangeFrom, rangeTo
         }
       },

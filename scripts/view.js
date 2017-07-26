@@ -9,7 +9,7 @@
     1: 'Change'
   };
 
-  function createHeader(isFilterShown) {
+  function createHeader(uiState) {
     return `<header>
       <h1>STOKR</h1>
       <ul class="menu reset-list">
@@ -27,7 +27,7 @@
         </li>
       </ul>
       <!--?????????/del?????-->
-      ${isFilterShown ? renderForm() : ''}
+      ${uiState.isFiltersShown ? renderForm(uiState) : ''}
     </header>`;
   }
 
@@ -94,7 +94,6 @@
     });
 
     stockListElm = stockListElm.join('');
-    console.log(stockListElm);
     return `<ul class="reset-list stock-list">${stockListElm}</ul>`;
   }
 
@@ -141,15 +140,21 @@
    `;
   }
 
-  function renderForm() {
+
+  // filters: {
+  //   name: '',
+  //     gain: 'All',
+  //     rangeFrom: '',
+  //     rangeTo: '',
+  function renderForm(uiState) {
     return `<form class="filter-fields">
               <div class="filter-criteria">
                 <label for="nameFilter">ByName</label>
-                <input type="text" id="nameFilter" name="nameFilter">
+                <input type="text" id="nameFilter" name="nameFilter" value=${uiState.filters.name}>
               </div>
               <div class="filter-criteria">
                 <label for="select-gain">By Gain</label>
-                <select id="select-gain" name="select-gain"> 
+                <select id="select-gain" name="select-gain" value=${uiState.filters.gain}> 
                   <option value="All" selected>All</option> 
                   <option value="Losing" >Losing</option>
                   <option value="Gaining">Gaining</option>
@@ -157,11 +162,11 @@
               </div>
               <div class="filter-criteria">
                 <label for="range-from">By Range: From</label>
-                <input type="number" id="range-from" name="range-from">
+                <input type="number" id="range-from" name="range-from" value=${uiState.filters.rangeFrom}>
               </div>
               <div class="filter-criteria">
                 <label for="range-to">By Range: To</label>
-                <input type="number" id="range-to" class="range-to">
+                <input type="number" id="range-to" class="range-to" value=${uiState.filters.rangeTo}>
               </div>
               <button class="apply-filter">Apply</button>
             </form>`
@@ -178,7 +183,7 @@
 
   function renderHome(stocks, uiState) {
     const divElm = document.querySelector('.stock-list-page');
-    divElm.innerHTML = `${createHeader(uiState.isFiltersShown)} ${createMain(stocks, uiState)}`;
+    divElm.innerHTML = `${createHeader(uiState)} ${createMain(stocks, uiState)}`;
     setupEventListeners();
   }
 
