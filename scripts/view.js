@@ -1,4 +1,3 @@
-
 (function () {
   'use strict';
 
@@ -42,7 +41,7 @@
 
     mainElm.addEventListener('click', handelMainClick);
     filterButton.addEventListener('click', filterModeHandler);
-    if(formElm !== null){
+    if (formElm !== null) {
       formElm.addEventListener('submit', filterHandler)
     }
     window.addEventListener('hashchange', hashchangeHandler);
@@ -51,6 +50,7 @@
   function hashchangeHandler() {
     window.Stokr.Ctrl.onRouteChange()
   }
+
   function filterHandler(event) {
     event.preventDefault();
     const formElm = event.target.elements;
@@ -58,7 +58,7 @@
     const gain = formElm['select-gain'].value;
     const rangeFrom = formElm['range-from'].value;
     const rangeTo = formElm['range-to'].value;
-    window.Stokr.Ctrl.filterStocks({name, gain, rangeFrom, rangeTo});
+    window.Stokr.Ctrl.filtersUpdate({name, gain, rangeFrom, rangeTo});
   }
 
 
@@ -116,7 +116,7 @@
     const stockChange = getStockChange(uiState.stockMode);
     let change = stockData[stockChange];
     change = (Math.round(change * 100) / 100).toFixed(2);
-    if(stockChange === 'PercentChange'){
+    if (stockChange === 'PercentChange') {
       change = change + '%';
     }
     return `
@@ -154,10 +154,10 @@
               </div>
               <div class="filter-criteria">
                 <label for="select-gain">By Gain</label>
-                <select id="select-gain" name="select-gain" value=${uiState.filters.gain}> 
-                  <option value="All" selected>All</option> 
-                  <option value="Losing" >Losing</option>
-                  <option value="Gaining">Gaining</option>
+                <select id="select-gain" name="select-gain"> 
+                  <option value="All" ${uiState.filters.gain === 'All' ? 'selected' : ''}>All</option> 
+                  <option value="Losing" ${uiState.filters.gain === 'Losing' ? 'selected' : ''}>Losing</option>
+                  <option value="Gaining"${uiState.filters.gain === 'Gaining' ? 'selected' : ''}>Gaining</option>
                 </select>
               </div>
               <div class="filter-criteria">
@@ -187,9 +187,9 @@
     setupEventListeners();
   }
 
-  function renderSearch(stocks, uiState){
+  function renderSearch(stocks, uiState) {
     const divElm = document.querySelector('.stock-list-page');
-    divElm.innerHTML= `<header>
+    divElm.innerHTML = `<header>
             <a href="#">Home</a>
             </header>`;
     window.addEventListener('hashchange', hashchangeHandler);
@@ -197,11 +197,11 @@
   }
 
   function render(stocks, uiState) {
-    const hashUrl  =  window.location.hash.slice(1);
-    if(hashUrl === ''){
+    const hashUrl = window.location.hash.slice(1);
+    if (hashUrl === '') {
       renderHome(stocks, uiState);
     }
-    if(hashUrl === 'search'){
+    if (hashUrl === 'search') {
       renderSearch(stocks, uiState);
     }
   }

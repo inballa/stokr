@@ -63,31 +63,54 @@
       return rangeFrom && rangeTo;
     }
 
-    //refactor to outer func
-    // function filterStocks(name, gain, rangeFrom, rangeTo) {
-    function filterStocks(filter) {
-      updateUi('filters', filter);
+
+    function filterStocks() {
+      const filters = Model.getState().ui.filters;
       const stocks = Model.getState().stocks;
+      if (filters.name === '' && filters.gain === 'All'
+        && filters.rangeTo === '' && filters.rangeFrom === '') {
+        return stocks;
+      }
 
       Model.getState().filteredStocks = stocks.filter((stockData) => {
-        const containsName = passNameFilter(stockData, filter.name);
-        const gainBool = passGainFilter(stockData, filter.gain);
-        const range = inRange(stockData, filter.rangeFrom, filter.rangeTo);
-        // const filterConditions = [containsName, gainBool, range];
-        //Array.every/////////////
-        // return filterConditions.every(val => {val === true});
+        const containsName = passNameFilter(stockData, filters.name);
+        const gainBool = passGainFilter(stockData, filters.gain);
+        const range = inRange(stockData, filters.rangeFrom, filters.rangeTo);
         return containsName && gainBool && range;
       })
-      renderView(Model.getState().filteredStocks);
+      return Model.getState().filteredStocks;
+    }
+
+    // function filterStocks(filter) {
+    //   const stocks = Model.getState().stocks;
+    //
+    //   Model.getState().filteredStocks = stocks.filter((stockData) => {
+    //     const containsName = passNameFilter(stockData, filter.name);
+    //     const gainBool = passGainFilter(stockData, filter.gain);
+    //     const range = inRange(stockData, filter.rangeFrom, filter.rangeTo);
+    //     // const filterConditions = [containsName, gainBool, range];
+    //     //Array.every/////////////
+    //     // return filterConditions.every(val => {val === true});
+    //     return containsName && gainBool && range;
+    //   })
+    // }
+
+    function filtersUpdate(filter){
+      updateUi('filters', filter);
+      renderView();
     }
 
     function onRouteChange() {
-      renderView(Model.getState().stocks);
+      renderView();
     }
 
-    function renderView(stocks) {
+    function renderView() {
       const state = Model.getState();
       const uiState = state.ui;
+      let stocks = state.stocks;
+      if(uiState.isFiltersShown){
+        stocks = filterStocks();
+      }
       View.render(stocks, uiState);
     }
 
@@ -95,7 +118,7 @@
       toggleChangeButton,
       reorderStocks,
       changeFilterMode,
-      filterStocks,
+      filtersUpdate,
       onRouteChange,
     };
     function fetchStocks() {
@@ -157,7 +180,7 @@
             stockList = [stockList];
           }
           Model.getState().stocks = stockList.map(buildStock);
-          renderView(Model.getState().stocks);
+          renderView();
         })
 
     }
